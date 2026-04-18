@@ -1,3 +1,4 @@
+using System;
 using System.Net;
 using System.Net.Http.Json;
 using HotelBooking.Controllers;
@@ -42,10 +43,12 @@ public class BookingIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         // Arrange
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
 
         // Seed data
-        var room1 = new Room { Id = 1, Number = "101", Type = RoomType.Single, PricePerNight = 100, Floor = 1, IsAvailable = true };
-        var room2 = new Room { Id = 2, Number = "102", Type = RoomType.Double, PricePerNight = 150, Floor = 1, IsAvailable = true };
+        var room1 = new Room { Number = "101", Type = RoomType.Single, PricePerNight = 100, Floor = 1, IsAvailable = true };
+        var room2 = new Room { Number = "102", Type = RoomType.Double, PricePerNight = 150, Floor = 1, IsAvailable = true };
         db.Rooms.AddRange(room1, room2);
         await db.SaveChangesAsync();
 
@@ -64,18 +67,20 @@ public class BookingIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         // Arrange
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
 
         // Seed data
-        var room = new Room { Id = 1, Number = "101", Type = RoomType.Single, PricePerNight = 100, Floor = 1, IsAvailable = true };
-        var guest = new Guest { Id = 1, FirstName = "John", LastName = "Doe", Email = "john@example.com", Phone = "123456789", PassportNumber = "ABC123" };
+        var room = new Room { Number = "101", Type = RoomType.Single, PricePerNight = 100, Floor = 1, IsAvailable = true };
+        var guest = new Guest { FirstName = "John", LastName = "Doe", Email = "john@example.com", Phone = "123456789", PassportNumber = "ABC123" };
         db.Rooms.Add(room);
         db.Guests.Add(guest);
         await db.SaveChangesAsync();
 
         var request1 = new CreateReservationRequest
         {
-            RoomId = 1,
-            GuestId = 1,
+            RoomId = room.Id,
+            GuestId = guest.Id,
             CheckInDate = new DateTime(2024, 1, 1),
             CheckOutDate = new DateTime(2024, 1, 3)
         };
@@ -87,8 +92,8 @@ public class BookingIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         // Act: Try to create overlapping reservation
         var request2 = new CreateReservationRequest
         {
-            RoomId = 1,
-            GuestId = 1,
+            RoomId = room.Id,
+            GuestId = guest.Id,
             CheckInDate = new DateTime(2024, 1, 2),
             CheckOutDate = new DateTime(2024, 1, 4)
         };
@@ -104,18 +109,20 @@ public class BookingIntegrationTests : IClassFixture<WebApplicationFactory<Progr
         // Arrange
         using var scope = _factory.Services.CreateScope();
         var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+        db.Database.EnsureDeleted();
+        db.Database.EnsureCreated();
 
         // Seed data
-        var room = new Room { Id = 1, Number = "101", Type = RoomType.Single, PricePerNight = 100, Floor = 1, IsAvailable = true };
-        var guest = new Guest { Id = 1, FirstName = "John", LastName = "Doe", Email = "john@example.com", Phone = "123456789", PassportNumber = "ABC123" };
+        var room = new Room { Number = "101", Type = RoomType.Single, PricePerNight = 100, Floor = 1, IsAvailable = true };
+        var guest = new Guest { FirstName = "John", LastName = "Doe", Email = "john@example.com", Phone = "123456789", PassportNumber = "ABC123" };
         db.Rooms.Add(room);
         db.Guests.Add(guest);
         await db.SaveChangesAsync();
 
         var createRequest = new CreateReservationRequest
         {
-            RoomId = 1,
-            GuestId = 1,
+            RoomId = room.Id,
+            GuestId = guest.Id,
             CheckInDate = DateTime.Today,
             CheckOutDate = DateTime.Today.AddDays(2)
         };

@@ -86,11 +86,16 @@ namespace HotelBooking.Migrations
                 name: "IX_Reservations_RoomId",
                 table: "Reservations",
                 column: "RoomId");
+
+            migrationBuilder.Sql("CREATE EXTENSION IF NOT EXISTS btree_gist;");
+            migrationBuilder.Sql(
+                "ALTER TABLE \"Reservations\" ADD CONSTRAINT \"UX_Reservations_Room_Dates\" EXCLUDE USING gist (\"RoomId\" WITH =, tstzrange(\"CheckInDate\", \"CheckOutDate\", '[]') WITH &&) WHERE (\"Status\" != 'Cancelled');");
         }
 
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
+            migrationBuilder.Sql("ALTER TABLE \"Reservations\" DROP CONSTRAINT IF EXISTS \"UX_Reservations_Room_Dates\";");
             migrationBuilder.DropTable(
                 name: "Reservations");
 
