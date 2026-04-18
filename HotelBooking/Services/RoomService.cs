@@ -24,6 +24,16 @@ public class RoomService
 
     public async Task<IEnumerable<Room>> GetAvailableRoomsAsync(DateTime checkIn, DateTime checkOut)
     {
+        if (checkIn.Kind == DateTimeKind.Unspecified)
+        {
+            checkIn = DateTime.SpecifyKind(checkIn, DateTimeKind.Utc);
+        }
+
+        if (checkOut.Kind == DateTimeKind.Unspecified)
+        {
+            checkOut = DateTime.SpecifyKind(checkOut, DateTimeKind.Utc);
+        }
+
         return await _roomRepository.GetAvailableRoomsAsync(checkIn, checkOut);
     }
 

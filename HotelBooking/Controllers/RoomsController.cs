@@ -42,6 +42,16 @@ public class RoomsController : ControllerBase
     [HttpGet("available")]
     public async Task<IActionResult> GetAvailableRooms([FromQuery] DateTime checkIn, [FromQuery] DateTime checkOut)
     {
+        if (checkIn.Kind == DateTimeKind.Unspecified)
+        {
+            checkIn = DateTime.SpecifyKind(checkIn, DateTimeKind.Utc);
+        }
+
+        if (checkOut.Kind == DateTimeKind.Unspecified)
+        {
+            checkOut = DateTime.SpecifyKind(checkOut, DateTimeKind.Utc);
+        }
+
         var rooms = await _roomService.GetAvailableRoomsAsync(checkIn, checkOut);
         return Ok(rooms);
     }
