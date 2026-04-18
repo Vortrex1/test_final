@@ -1,12 +1,13 @@
 {
   "version": 2,
-  "dgSpecHash": "IkKgCfZk2fc=",
+  "dgSpecHash": "Z0XW5pigLsY=",
   "success": true,
   "projectFilePath": "C:\\kn\\lab\\test_final\\HotelBooking.Tests\\HotelBooking.Tests.csproj",
   "expectedPackageFiles": [
     "C:\\Users\\Andriy\\.nuget\\packages\\autofixture\\4.18.1\\autofixture.4.18.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\autofixture.xunit2\\4.18.1\\autofixture.xunit2.4.18.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\bouncycastle.cryptography\\2.6.2\\bouncycastle.cryptography.2.6.2.nupkg.sha512",
+    "C:\\Users\\Andriy\\.nuget\\packages\\castle.core\\5.1.1\\castle.core.5.1.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\coverlet.collector\\6.0.4\\coverlet.collector.6.0.4.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\docker.dotnet.enhanced\\3.131.1\\docker.dotnet.enhanced.3.131.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\docker.dotnet.enhanced.x509\\3.131.1\\docker.dotnet.enhanced.x509.3.131.1.nupkg.sha512",
@@ -57,6 +58,7 @@
     "C:\\Users\\Andriy\\.nuget\\packages\\microsoft.testplatform.objectmodel\\17.14.1\\microsoft.testplatform.objectmodel.17.14.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\microsoft.testplatform.testhost\\17.14.1\\microsoft.testplatform.testhost.17.14.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\microsoft.win32.primitives\\4.3.0\\microsoft.win32.primitives.4.3.0.nupkg.sha512",
+    "C:\\Users\\Andriy\\.nuget\\packages\\moq\\4.20.72\\moq.4.20.72.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\netstandard.library\\1.6.1\\netstandard.library.1.6.1.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\Andriy\\.nuget\\packages\\npgsql\\8.0.5\\npgsql.8.0.5.nupkg.sha512",

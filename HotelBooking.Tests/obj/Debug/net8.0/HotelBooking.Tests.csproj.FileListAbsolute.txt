@@ -452,3 +452,5 @@ C:\kn\lab\test_final\HotelBooking.Tests\obj\Debug\net8.0\refint\HotelBooking.Tes
 C:\kn\lab\test_final\HotelBooking.Tests\obj\Debug\net8.0\HotelBooking.Tests.pdb
 C:\kn\lab\test_final\HotelBooking.Tests\obj\Debug\net8.0\HotelBooking.Tests.genruntimeconfig.cache
 C:\kn\lab\test_final\HotelBooking.Tests\obj\Debug\net8.0\ref\HotelBooking.Tests.dll
+C:\kn\lab\test_final\HotelBooking.Tests\bin\Debug\net8.0\Castle.Core.dll
+C:\kn\lab\test_final\HotelBooking.Tests\bin\Debug\net8.0\Moq.dll
