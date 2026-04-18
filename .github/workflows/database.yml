@@ -1,0 +1,81 @@
+name: Database Tests
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: hoteldb
+  POSTGRES_PORT: 5432
+
+jobs:
+  database-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - ${{ env.POSTGRES_PORT }}:5432
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p ${{ env.POSTGRES_PORT }}; do
+            echo 'Waiting for PostgreSQL...'
+            sleep 1
+          done
+        env:
+          PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
+      
+      - name: Restore NuGet packages
+        run: dotnet restore
+      
+      - name: Build project
+        run: dotnet build --configuration Release --no-restore
+      
+      - name: Run Database Tests
+        run: dotnet test HotelBooking.Tests/HotelBooking.Tests.csproj --filter "Category=Database" --configuration Release --no-build --logger "trx;LogFileName=database-tests.trx"
+        env:
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=${{ env.POSTGRES_PORT }};Database=${{ env.POSTGRES_DB }};Username=${{ env.POSTGRES_USER }};Password=${{ env.POSTGRES_PASSWORD }}"
+      
+      - name: Upload test results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: database-test-results
+          path: |
+            **/bin/Release/**/TestResults/
+          retention-days: 30
+      
+      - name: Publish test report
+        uses: EnricoMi/publish-unit-test-result-action@v2
+        if: always()
+        with:
+          files: '**/bin/Release/**/TestResults/*.trx'
+          check_name: Database Tests
+          comment_title: Database Test Results

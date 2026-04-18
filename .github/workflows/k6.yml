@@ -1,0 +1,110 @@
+name: K6 Performance Tests
+
+on:
+  push:
+    branches:
+      - dev
+  pull_request:
+    branches:
+      - main
+
+env:
+  DOTNET_VERSION: '8.0.x'
+  POSTGRES_USER: postgres
+  POSTGRES_PASSWORD: postgres
+  POSTGRES_DB: hoteldb
+  POSTGRES_PORT: 5432
+  API_PORT: 5000
+
+jobs:
+  performance-tests:
+    runs-on: ubuntu-latest
+    
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: ${{ env.POSTGRES_USER }}
+          POSTGRES_PASSWORD: ${{ env.POSTGRES_PASSWORD }}
+          POSTGRES_DB: ${{ env.POSTGRES_DB }}
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - ${{ env.POSTGRES_PORT }}:5432
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Setup k6
+        uses: grafana/setup-k6-action@v1
+        with:
+          k6-version: latest
+      
+      - name: Wait for PostgreSQL
+        run: |
+          until pg_isready -h localhost -p ${{ env.POSTGRES_PORT }}; do
+            echo 'Waiting for PostgreSQL...'
+            sleep 1
+          done
+        env:
+          PGPASSWORD: ${{ env.POSTGRES_PASSWORD }}
+      
+      - name: Restore NuGet packages
+        run: dotnet restore
+      
+      - name: Build API
+        run: dotnet build HotelBooking/HotelBooking.csproj --configuration Release
+      
+      - name: Publish API
+        run: dotnet publish HotelBooking/HotelBooking.csproj --configuration Release --output ./api-build --no-build
+      
+      - name: Start API with seeded database
+        run: |
+          cd ./api-build
+          timeout 120 dotnet HotelBooking.dll &
+          sleep 10
+        env:
+          ASPNETCORE_ENVIRONMENT: Production
+          ASPNETCORE_URLS: http://localhost:${{ env.API_PORT }}
+          ConnectionStrings__DefaultConnection: "Host=localhost;Port=${{ env.POSTGRES_PORT }};Database=${{ env.POSTGRES_DB }};Username=${{ env.POSTGRES_USER }};Password=${{ env.POSTGRES_PASSWORD }}"
+        continue-on-error: true
+      
+      - name: Wait for API to be ready
+        run: |
+          for i in {1..30}; do
+            if curl -s http://localhost:${{ env.API_PORT }}/api/rooms > /dev/null; then
+              echo "API is ready!"
+              exit 0
+            fi
+            echo "Waiting for API... (attempt $i/30)"
+            sleep 2
+          done
+          echo "API failed to start"
+          exit 1
+      
+      - name: Run k6 Smoke Tests
+        run: k6 run HotelBooking.Tests/Performance/smoke.js --env BASE_URL=http://localhost:${{ env.API_PORT }}
+      
+      - name: Run k6 Load Tests
+        run: k6 run HotelBooking.Tests/Performance/load.js --env BASE_URL=http://localhost:${{ env.API_PORT }}
+      
+      - name: Run k6 Stress Tests
+        run: k6 run HotelBooking.Tests/Performance/stress.js --env BASE_URL=http://localhost:${{ env.API_PORT }}
+      
+      - name: Upload k6 results
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: k6-results
+          path: |
+            k6-results/
+          retention-days: 30
