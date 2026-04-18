@@ -8,6 +8,8 @@
     ".NETCoreApp,Version=v8.0": {
       "HotelBooking/1.0.0": {
         "dependencies": {
+          "AutoFixture": "4.17.0",
+          "Bogus": "35.6.5",
           "Microsoft.AspNetCore.OpenApi": "8.0.26",
           "Microsoft.EntityFrameworkCore.Tools": "10.0.6",
           "Npgsql.EntityFrameworkCore.PostgreSQL": "8.0.10",
@@ -15,6 +17,33 @@
         },
         "runtime": {
           "HotelBooking.dll": {}
+        }
+      },
+      "AutoFixture/4.17.0": {
+        "dependencies": {
+          "Fare": "2.1.1"
+        },
+        "runtime": {
+          "lib/netstandard2.0/AutoFixture.dll": {
+            "assemblyVersion": "4.17.0.0",
+            "fileVersion": "4.17.0.636"
+          }
+        }
+      },
+      "Bogus/35.6.5": {
+        "runtime": {
+          "lib/net6.0/Bogus.dll": {
+            "assemblyVersion": "35.6.5.0",
+            "fileVersion": "35.6.5.0"
+          }
+        }
+      },
+      "Fare/2.1.1": {
+        "runtime": {
+          "lib/netstandard1.1/Fare.dll": {
+            "assemblyVersion": "2.1.0.0",
+            "fileVersion": "2.1.1.0"
+          }
         }
       },
       "Humanizer.Core/2.14.1": {
@@ -538,6 +567,27 @@
       "type": "project",
       "serviceable": false,
       "sha512": ""
+    },
+    "AutoFixture/4.17.0": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-efMRCG3Epc4QDELwdmQGf6/caQUleRXPRCnLAq5gLMpTuOTcOQWV12vEJ8qo678Rj97/TjjxHYu/34rGkXdVAA==",
+      "path": "autofixture/4.17.0",
+      "hashPath": "autofixture.4.17.0.nupkg.sha512"
+    },
+    "Bogus/35.6.5": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-2FGZn+aAVHjmCgClgmGkTDBVZk0zkLvAKGaxEf5JL6b3i9JbHTE4wnuY4vHCuzlCmJdU6VZjgDfHwmYkQF8VAA==",
+      "path": "bogus/35.6.5",
+      "hashPath": "bogus.35.6.5.nupkg.sha512"
+    },
+    "Fare/2.1.1": {
+      "type": "package",
+      "serviceable": true,
+      "sha512": "sha512-HaI8puqA66YU7/9cK4Sgbs1taUTP1Ssa4QT2PIzqJ7GvAbN1QgkjbRsjH+FSbMh1MJdvS0CIwQNLtFT+KF6KpA==",
+      "path": "fare/2.1.1",
+      "hashPath": "fare.2.1.1.nupkg.sha512"
     },
     "Humanizer.Core/2.14.1": {
       "type": "package",

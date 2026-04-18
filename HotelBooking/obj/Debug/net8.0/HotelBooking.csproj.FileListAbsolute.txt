@@ -113,3 +113,6 @@ C:\kn\lab\test_final\HotelBooking\obj\Debug\net8.0\refint\HotelBooking.dll
 C:\kn\lab\test_final\HotelBooking\obj\Debug\net8.0\HotelBooking.pdb
 C:\kn\lab\test_final\HotelBooking\obj\Debug\net8.0\HotelBooking.genruntimeconfig.cache
 C:\kn\lab\test_final\HotelBooking\obj\Debug\net8.0\ref\HotelBooking.dll
+C:\kn\lab\test_final\HotelBooking\bin\Debug\net8.0\AutoFixture.dll
+C:\kn\lab\test_final\HotelBooking\bin\Debug\net8.0\Bogus.dll
+C:\kn\lab\test_final\HotelBooking\bin\Debug\net8.0\Fare.dll

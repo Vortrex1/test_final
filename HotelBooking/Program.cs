@@ -26,21 +26,12 @@ builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
 
-// Seed database with sample data.
+// Seed database with large realistic dataset for k6.
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
     db.Database.Migrate();
-
-    if (!db.Rooms.Any())
-    {
-        db.Rooms.AddRange(
-            new Room { Number = "101", Type = RoomType.Single, PricePerNight = 75m, Floor = 1, IsAvailable = true },
-            new Room { Number = "102", Type = RoomType.Double, PricePerNight = 120m, Floor = 1, IsAvailable = true },
-            new Room { Number = "201", Type = RoomType.Suite, PricePerNight = 210m, Floor = 2, IsAvailable = true }
-        );
-        db.SaveChanges();
-    }
+    SeedData.Seed(db);
 }
 
 // Configure the HTTP request pipeline.
